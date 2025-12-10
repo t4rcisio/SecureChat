@@ -449,6 +449,16 @@ class Ui_Form(object):
         self.widget_26 = QtWidgets.QWidget(parent=self.widget_16)
         self.widget_26.setObjectName("widget_26")
         self.horizontalLayout_9.addWidget(self.widget_26)
+        self.pushButton_5 = QtWidgets.QPushButton(parent=self.widget_16)
+        self.pushButton_5.setMinimumSize(QtCore.QSize(35, 0))
+        self.pushButton_5.setMaximumSize(QtCore.QSize(35, 16777215))
+        self.pushButton_5.setText("")
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap(".\\ui\\../sources/config-svgrepo-com.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.pushButton_5.setIcon(icon2)
+        self.pushButton_5.setIconSize(QtCore.QSize(35, 35))
+        self.pushButton_5.setObjectName("pushButton_5")
+        self.horizontalLayout_9.addWidget(self.pushButton_5)
         self.verticalLayout_10.addWidget(self.widget_16)
         self.widget_18 = QtWidgets.QWidget(parent=self.home_page)
         self.widget_18.setStyleSheet("background-color: rgb(238, 238, 239);")
@@ -493,7 +503,7 @@ class Ui_Form(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 459, 575))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 455, 566))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.verticalLayout_11.addWidget(self.scrollArea)
@@ -527,9 +537,9 @@ class Ui_Form(object):
 "}\n"
 "")
         self.back_3.setText("")
-        icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(".\\ui\\../sources/back-svgrepo-com.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.back_3.setIcon(icon2)
+        icon3 = QtGui.QIcon()
+        icon3.addPixmap(QtGui.QPixmap(".\\ui\\../sources/back-svgrepo-com.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.back_3.setIcon(icon3)
         self.back_3.setIconSize(QtCore.QSize(30, 30))
         self.back_3.setObjectName("back_3")
         self.horizontalLayout_13.addWidget(self.back_3)
@@ -544,9 +554,9 @@ class Ui_Form(object):
         self.horizontalLayout_13.addWidget(self.label_13)
         self.pushButton_3 = QtWidgets.QPushButton(parent=self.widget_27)
         self.pushButton_3.setText("")
-        icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap(".\\ui\\../sources/profile-circle-svgrepo-com.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.pushButton_3.setIcon(icon3)
+        icon4 = QtGui.QIcon()
+        icon4.addPixmap(QtGui.QPixmap(".\\ui\\../sources/profile-circle-svgrepo-com.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.pushButton_3.setIcon(icon4)
         self.pushButton_3.setIconSize(QtCore.QSize(45, 45))
         self.pushButton_3.setObjectName("pushButton_3")
         self.horizontalLayout_13.addWidget(self.pushButton_3)
@@ -594,7 +604,7 @@ class Ui_Form(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollArea_2.setObjectName("scrollArea_2")
         self.scrollAreaWidgetContents_2 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 441, 572))
+        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 433, 564))
         self.scrollAreaWidgetContents_2.setObjectName("scrollAreaWidgetContents_2")
         self.scrollArea_2.setWidget(self.scrollAreaWidgetContents_2)
         self.verticalLayout_14.addWidget(self.scrollArea_2)
@@ -632,14 +642,229 @@ class Ui_Form(object):
 "}\n"
 "")
         self.send.setText("")
-        icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap(".\\ui\\../sources/send-svgrepo-com.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.send.setIcon(icon4)
+        icon5 = QtGui.QIcon()
+        icon5.addPixmap(QtGui.QPixmap(".\\ui\\../sources/send-svgrepo-com.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.send.setIcon(icon5)
         self.send.setIconSize(QtCore.QSize(30, 30))
         self.send.setObjectName("send")
         self.horizontalLayout_16.addWidget(self.send)
         self.verticalLayout_12.addWidget(self.widget_29)
         self.stackedWidget.addWidget(self.chat_page)
+        self.page = QtWidgets.QWidget()
+        self.page.setObjectName("page")
+        self.verticalLayout_17 = QtWidgets.QVBoxLayout(self.page)
+        self.verticalLayout_17.setObjectName("verticalLayout_17")
+        self.widget_33 = QtWidgets.QWidget(parent=self.page)
+        self.widget_33.setObjectName("widget_33")
+        self.horizontalLayout_18 = QtWidgets.QHBoxLayout(self.widget_33)
+        self.horizontalLayout_18.setObjectName("horizontalLayout_18")
+        self.label_7 = QtWidgets.QLabel(parent=self.widget_33)
+        self.label_7.setObjectName("label_7")
+        self.horizontalLayout_18.addWidget(self.label_7)
+        self.verticalLayout_17.addWidget(self.widget_33)
+        self.widget_34 = QtWidgets.QWidget(parent=self.page)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.MinimumExpanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.widget_34.sizePolicy().hasHeightForWidth())
+        self.widget_34.setSizePolicy(sizePolicy)
+        self.widget_34.setObjectName("widget_34")
+        self.verticalLayout_18 = QtWidgets.QVBoxLayout(self.widget_34)
+        self.verticalLayout_18.setObjectName("verticalLayout_18")
+        self.pushButton_4 = QtWidgets.QPushButton(parent=self.widget_34)
+        self.pushButton_4.setText("")
+        self.pushButton_4.setIcon(icon4)
+        self.pushButton_4.setIconSize(QtCore.QSize(100, 100))
+        self.pushButton_4.setObjectName("pushButton_4")
+        self.verticalLayout_18.addWidget(self.pushButton_4)
+        self.verticalLayout_17.addWidget(self.widget_34)
+        self.widget_35 = QtWidgets.QWidget(parent=self.page)
+        self.widget_35.setStyleSheet("background-color: rgb(225, 225, 226)")
+        self.widget_35.setObjectName("widget_35")
+        self.verticalLayout_16 = QtWidgets.QVBoxLayout(self.widget_35)
+        self.verticalLayout_16.setObjectName("verticalLayout_16")
+        self.widget_36 = QtWidgets.QWidget(parent=self.widget_35)
+        self.widget_36.setMinimumSize(QtCore.QSize(0, 41))
+        self.widget_36.setStyleSheet("background-color: rgb(238, 238, 239);\n"
+"border-radius:8px;\n"
+"font-size:14px;\n"
+"padding-left:8px;\n"
+"color:rgb(31, 73, 125)")
+        self.widget_36.setObjectName("widget_36")
+        self.horizontalLayout_19 = QtWidgets.QHBoxLayout(self.widget_36)
+        self.horizontalLayout_19.setContentsMargins(3, 3, 3, 3)
+        self.horizontalLayout_19.setObjectName("horizontalLayout_19")
+        self.label_9 = QtWidgets.QLabel(parent=self.widget_36)
+        self.label_9.setMinimumSize(QtCore.QSize(121, 0))
+        self.label_9.setObjectName("label_9")
+        self.horizontalLayout_19.addWidget(self.label_9)
+        self.name_2 = QtWidgets.QLineEdit(parent=self.widget_36)
+        self.name_2.setMinimumSize(QtCore.QSize(220, 35))
+        self.name_2.setStyleSheet("background-color: rgb(222, 222, 223);\n"
+"border-radius:8px;\n"
+"font-size:14px;\n"
+"padding-left:8px;\n"
+"color:rgb(31, 73, 125)")
+        self.name_2.setPlaceholderText("")
+        self.name_2.setObjectName("name_2")
+        self.horizontalLayout_19.addWidget(self.name_2)
+        self.verticalLayout_16.addWidget(self.widget_36)
+        self.widget_37 = QtWidgets.QWidget(parent=self.widget_35)
+        self.widget_37.setMinimumSize(QtCore.QSize(0, 41))
+        self.widget_37.setStyleSheet("background-color: rgb(238, 238, 239);\n"
+"border-radius:8px;\n"
+"font-size:14px;\n"
+"padding-left:8px;\n"
+"color:rgb(31, 73, 125)")
+        self.widget_37.setObjectName("widget_37")
+        self.horizontalLayout_20 = QtWidgets.QHBoxLayout(self.widget_37)
+        self.horizontalLayout_20.setContentsMargins(3, 3, 3, 3)
+        self.horizontalLayout_20.setObjectName("horizontalLayout_20")
+        self.label_14 = QtWidgets.QLabel(parent=self.widget_37)
+        self.label_14.setMinimumSize(QtCore.QSize(121, 0))
+        self.label_14.setObjectName("label_14")
+        self.horizontalLayout_20.addWidget(self.label_14)
+        self.user_3 = QtWidgets.QLineEdit(parent=self.widget_37)
+        self.user_3.setMinimumSize(QtCore.QSize(220, 35))
+        self.user_3.setStyleSheet("background-color: rgb(222, 222, 223);\n"
+"border-radius:8px;\n"
+"font-size:14px;\n"
+"padding-left:8px;\n"
+"color:rgb(31, 73, 125)")
+        self.user_3.setPlaceholderText("")
+        self.user_3.setObjectName("user_3")
+        self.horizontalLayout_20.addWidget(self.user_3)
+        self.verticalLayout_16.addWidget(self.widget_37)
+        self.widget_38 = QtWidgets.QWidget(parent=self.widget_35)
+        self.widget_38.setMinimumSize(QtCore.QSize(0, 41))
+        self.widget_38.setStyleSheet("background-color: rgb(238, 238, 239);\n"
+"border-radius:8px;\n"
+"font-size:14px;\n"
+"padding-left:8px;\n"
+"color:rgb(31, 73, 125)")
+        self.widget_38.setObjectName("widget_38")
+        self.horizontalLayout_21 = QtWidgets.QHBoxLayout(self.widget_38)
+        self.horizontalLayout_21.setContentsMargins(3, 3, 3, 3)
+        self.horizontalLayout_21.setObjectName("horizontalLayout_21")
+        self.label_15 = QtWidgets.QLabel(parent=self.widget_38)
+        self.label_15.setMinimumSize(QtCore.QSize(121, 0))
+        self.label_15.setObjectName("label_15")
+        self.horizontalLayout_21.addWidget(self.label_15)
+        self.email_2 = QtWidgets.QLineEdit(parent=self.widget_38)
+        self.email_2.setMinimumSize(QtCore.QSize(220, 35))
+        self.email_2.setStyleSheet("background-color: rgb(222, 222, 223);\n"
+"border-radius:8px;\n"
+"font-size:14px;\n"
+"padding-left:8px;\n"
+"color:rgb(31, 73, 125)")
+        self.email_2.setPlaceholderText("")
+        self.email_2.setObjectName("email_2")
+        self.horizontalLayout_21.addWidget(self.email_2)
+        self.verticalLayout_16.addWidget(self.widget_38)
+        self.widget_39 = QtWidgets.QWidget(parent=self.widget_35)
+        self.widget_39.setMinimumSize(QtCore.QSize(0, 41))
+        self.widget_39.setStyleSheet("background-color: rgb(238, 238, 239);\n"
+"border-radius:8px;\n"
+"font-size:14px;\n"
+"padding-left:8px;\n"
+"color:rgb(31, 73, 125)")
+        self.widget_39.setObjectName("widget_39")
+        self.horizontalLayout_22 = QtWidgets.QHBoxLayout(self.widget_39)
+        self.horizontalLayout_22.setContentsMargins(3, 3, 3, 3)
+        self.horizontalLayout_22.setObjectName("horizontalLayout_22")
+        self.label_16 = QtWidgets.QLabel(parent=self.widget_39)
+        self.label_16.setMinimumSize(QtCore.QSize(121, 0))
+        self.label_16.setObjectName("label_16")
+        self.horizontalLayout_22.addWidget(self.label_16)
+        self.password_4 = QtWidgets.QLineEdit(parent=self.widget_39)
+        self.password_4.setMinimumSize(QtCore.QSize(220, 35))
+        self.password_4.setStyleSheet("background-color: rgb(222, 222, 223);\n"
+"border-radius:8px;\n"
+"font-size:14px;\n"
+"padding-left:8px;\n"
+"color:rgb(31, 73, 125)")
+        self.password_4.setPlaceholderText("")
+        self.password_4.setObjectName("password_4")
+        self.horizontalLayout_22.addWidget(self.password_4)
+        self.verticalLayout_16.addWidget(self.widget_39)
+        self.widget_40 = QtWidgets.QWidget(parent=self.widget_35)
+        self.widget_40.setMinimumSize(QtCore.QSize(0, 41))
+        self.widget_40.setStyleSheet("background-color: rgb(238, 238, 239);\n"
+"border-radius:8px;\n"
+"font-size:14px;\n"
+"padding-left:8px;\n"
+"color:rgb(31, 73, 125)")
+        self.widget_40.setObjectName("widget_40")
+        self.horizontalLayout_23 = QtWidgets.QHBoxLayout(self.widget_40)
+        self.horizontalLayout_23.setContentsMargins(3, 3, 3, 3)
+        self.horizontalLayout_23.setObjectName("horizontalLayout_23")
+        self.label_17 = QtWidgets.QLabel(parent=self.widget_40)
+        self.label_17.setMinimumSize(QtCore.QSize(101, 0))
+        self.label_17.setObjectName("label_17")
+        self.horizontalLayout_23.addWidget(self.label_17)
+        self.password_5 = QtWidgets.QLineEdit(parent=self.widget_40)
+        self.password_5.setMinimumSize(QtCore.QSize(220, 35))
+        self.password_5.setStyleSheet("background-color: rgb(222, 222, 223);\n"
+"border-radius:8px;\n"
+"font-size:14px;\n"
+"padding-left:8px;\n"
+"color:rgb(31, 73, 125)")
+        self.password_5.setPlaceholderText("")
+        self.password_5.setObjectName("password_5")
+        self.horizontalLayout_23.addWidget(self.password_5)
+        self.verticalLayout_16.addWidget(self.widget_40)
+        self.verticalLayout_17.addWidget(self.widget_35)
+        self.widget_41 = QtWidgets.QWidget(parent=self.page)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.MinimumExpanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.widget_41.sizePolicy().hasHeightForWidth())
+        self.widget_41.setSizePolicy(sizePolicy)
+        self.widget_41.setObjectName("widget_41")
+        self.verticalLayout_17.addWidget(self.widget_41)
+        self.widget_31 = QtWidgets.QWidget(parent=self.page)
+        self.widget_31.setObjectName("widget_31")
+        self.verticalLayout_15 = QtWidgets.QVBoxLayout(self.widget_31)
+        self.verticalLayout_15.setObjectName("verticalLayout_15")
+        self.save_2 = QtWidgets.QPushButton(parent=self.widget_31)
+        self.save_2.setMinimumSize(QtCore.QSize(250, 40))
+        self.save_2.setMaximumSize(QtCore.QSize(250, 40))
+        self.save_2.setStyleSheet("QPushButton {\n"
+"    background-color: rgb(31, 73, 125);\n"
+"    border-radius: 8px;\n"
+"    color: rgb(255, 255, 255);\n"
+"    font-size: 16px;      /* tamanho da fonte */\n"
+"    font-weight: bold;    /* deixa a fonte mais grossa */\n"
+"}\n"
+"QPushButton:hover {\n"
+"    background-color: rgb(18, 115, 176);\n"
+"}\n"
+"")
+        self.save_2.setObjectName("save_2")
+        self.verticalLayout_15.addWidget(self.save_2)
+        self.widget_32 = QtWidgets.QWidget(parent=self.widget_31)
+        self.widget_32.setObjectName("widget_32")
+        self.horizontalLayout_17 = QtWidgets.QHBoxLayout(self.widget_32)
+        self.horizontalLayout_17.setObjectName("horizontalLayout_17")
+        self.back_4 = QtWidgets.QPushButton(parent=self.widget_32)
+        self.back_4.setMinimumSize(QtCore.QSize(100, 30))
+        self.back_4.setMaximumSize(QtCore.QSize(130, 16777215))
+        self.back_4.setStyleSheet("QPushButton {\n"
+"    background-color: rgb(249, 68, 73);\n"
+"    border-radius: 8px;\n"
+"    color: rgb(255, 255, 255);\n"
+"    font-size: 16px;      /* tamanho da fonte */\n"
+"    font-weight: bold;    /* deixa a fonte mais grossa */\n"
+"}\n"
+"QPushButton:hover {\n"
+"    background-color:rgb(175, 47, 51);\n"
+"}\n"
+"")
+        self.back_4.setObjectName("back_4")
+        self.horizontalLayout_17.addWidget(self.back_4)
+        self.verticalLayout_15.addWidget(self.widget_32)
+        self.verticalLayout_17.addWidget(self.widget_31, 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
+        self.stackedWidget.addWidget(self.page)
         self.horizontalLayout.addWidget(self.stackedWidget)
 
         self.retranslateUi(Form)
@@ -675,6 +900,18 @@ class Ui_Form(object):
         self.label_11.setText(_translate("Form", "<html><head/><body><p align=\"center\"><span style=\" font-size:12pt; font-weight:600; color:#00165e;\">SECURE CHAT</span></p></body></html>"))
         self.search_btn.setText(_translate("Form", "BUSCAR"))
         self.label_13.setText(_translate("Form", "<html><head/><body><p><span style=\" font-size:12pt; font-weight:600; color:#00165e;\">#USER_NAME</span></p></body></html>"))
+        self.label_7.setText(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:18pt; font-weight:600; color:#00165e;\">MY ACCOUNT</span></p></body></html>"))
+        self.label_9.setText(_translate("Form", "Name"))
+        self.label_14.setText(_translate("Form", "User"))
+        self.label_15.setText(_translate("Form", "Email"))
+        self.label_16.setText(_translate("Form", "Password"))
+        self.label_17.setText(_translate("Form", "Repeat Password"))
+        self.save_2.setText(_translate("Form", "Salvar"))
+        self.back_4.setText(_translate("Form", "Voltar"))
 
 
 if __name__ == "__main__":

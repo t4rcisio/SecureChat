@@ -135,7 +135,7 @@ def create_user(data: UserCreate):
         db.add(user)
         db.commit()
         db.refresh(user)
-        return UserOut(name=user.name, username=user.username, email=user.email)
+        return UserOut(name=user.name, username=user.username, public_key=user.public_key)
     finally:
         db.close()
 

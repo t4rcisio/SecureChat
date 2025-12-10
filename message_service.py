@@ -4,6 +4,7 @@ from sqlalchemy.orm import declarative_base, sessionmaker, Session
 from pydantic import BaseModel
 from typing import Dict
 from datetime import datetime
+from fastapi.middleware.cors import CORSMiddleware
 
 # ==========================
 # ✅ CONFIGURAÇÃO DO BANCO
@@ -54,6 +55,15 @@ class MessageOut(BaseModel):
 
 app = FastAPI()
 connections: Dict[str, WebSocket] = {}
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 def get_db():
     db = SessionLocal()

@@ -4,14 +4,17 @@ import os
 import sys
 import requests
 
-from PyQt6 import QtWidgets, QtGui, QtCore
+from PyQt6 import QtWidgets, QtGui
 import traceback
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QMessageBox, QWidget, QVBoxLayout, QLabel, QHBoxLayout
 
-from db_service import update_user
+import json
+import asyncio
+import websockets
+from PyQt6.QtCore import QThread, pyqtSignal
 from pages import main
 
 VERSION="1.0"
@@ -26,12 +29,54 @@ CHAT_URL = 'http://127.0.0.1:9100'
 
 USER_DIR = ".\\user"
 
+
+
+
+class WebSocketListener(QThread):
+    evento_recebido = pyqtSignal(dict)
+
+    def __init__(self, username):
+        super().__init__()
+        self.username = username
+        self.running = True
+
+    def run(self):
+        # ✅ CRIA UM LOOP ASYNC EXCLUSIVO PARA ESSA THREAD
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        loop.run_until_complete(self.listen())
+
+    async def listen(self):
+        url = f"ws://127.0.0.1:9100/ws/{self.username}"
+
+        try:
+            async with websockets.connect(url) as ws:
+                while self.running:
+                    msg = await ws.recv()
+                    data = json.loads(msg)
+                    self.evento_recebido.emit(data)
+
+        except Exception as e:
+            print("❌ WebSocket erro:", e)
+
+    def stop(self):
+        self.running = False
+        self.quit()
+        self.wait()
+
+
+
 class App:
 
 
     def __init__(self):
 
         os.makedirs(USER_DIR, exist_ok=True)
+
+        self.headers = {
+            "x-internal-token": DB_TOKEN,
+            "Content-Type": "application/json"
+        }
 
     def initialize(self):
 
@@ -128,7 +173,6 @@ class App:
     def __show_history(self):
 
         self.clear_layout(self.scrollLayout)
-
         mensagens = self.buscar_historico(self.user_params['username'], self.current_contact["username"])
 
         for msg in mensagens:
@@ -144,9 +188,38 @@ class App:
 
         self.scrollLayout.addStretch()
 
-        self.homePage.scrollArea.verticalScrollBar().setValue(
-            self.homePage.scrollArea.verticalScrollBar().maximum()
+        self.homePage.scrollArea_2.verticalScrollBar().setValue(
+            self.homePage.scrollArea_2.verticalScrollBar().maximum()
         )
+
+    def mensagem_recebida(self, data):
+
+        sender = data["sender"]
+
+        # ✅ Se o usuário ainda não existe na lista → cria card novo
+        if sender not in self.cards_conversas:
+
+            response = requests.get(f"{DB_URL}/users/{sender}", headers=self.headers)
+            if response.status_code == 200:
+                response_json = response.json()
+
+                try:
+                    card = self.criar_card_conversa(response_json["name"], sender, datetime.datetime.now().isoformat())
+                except:
+                    print(traceback.format_exc())
+                self.cards_conversas[sender] = card
+                self.nao_lidas[sender] = 0
+
+                card.mousePressEvent = lambda event, id=sender: self.open_contact_chat(id)
+                self.scrollLayout_2.insertWidget(0, card)
+
+        # ✅ Incrementa contador
+        self.nao_lidas[sender] += 1
+
+        # ✅ Atualiza badge
+        card = self.cards_conversas[sender]
+        card.badge.setText(str(self.nao_lidas[sender]))
+        card.badge.show()
 
     def buscar_historico(self, user1, user2):
         url = f"{CHAT_URL}/messages/history/{user1}/{user2}"
@@ -197,7 +270,8 @@ class App:
 
     def open_chat(self):
 
-        self.homePage.label_13.setText('<html><head/><body><p><span style=" font-size:18pt; font-weight:600; color:#00165e;">'+str(self.current_contact['name'])+'</span></p></body></html>')
+        #self.homePage.label_13.setText('<html><head/><body><p><span style=" font-size:18pt; font-weight:600; color:#00165e;">'+str(self.current_contact['name'])+'</span></p></body></html>')
+        self.homePage.label_13.setText('<html><head/><body><p><span style=" font-size:18pt; font-weight:600; color:#00165e;">'+self.current_contact['name'].upper()+' </span><span style=" font-size:12pt; font-weight:600; color:#00165e;"></br>(@'+self.current_contact['username']+')</span></p></body></html>')
         self.homePage.stackedWidget.setCurrentIndex(4)
         self.__show_history()
 
@@ -208,12 +282,7 @@ class App:
         if user_name == self.user_params['username']:
             return
 
-        headers = {
-            "x-internal-token": "dev-internal-token",
-            "Content-Type": "application/json"
-        }
-
-        resp = requests.get(DB_URL + f"/users/{user_name}", headers=headers)
+        resp = requests.get(DB_URL + f"/users/{user_name}", headers=self.headers)
 
         if resp.status_code == 200:
 
@@ -238,15 +307,40 @@ class App:
 
         conversas = self.buscar_conversas(self.user_params['username'])
 
-        for nome, dt in conversas:
-            card = self.criar_card_conversa(nome, dt)
-            card.mouseMoveEvent = self.open_audio_file_dialog
-            self.scrollLayout_2.addWidget(card)
+        for u_id, dt in conversas:
+
+            response = requests.get(f"{DB_URL}/users/{u_id}", headers=self.headers )
+
+            if response.status_code == 200:
+
+                response_json = response.json()
+                card = self.criar_card_conversa(response_json["name"], u_id, dt)
+                self.cards_conversas[u_id] = card
+                self.nao_lidas[u_id] = 0
+                card.mousePressEvent = lambda event, id=u_id: self.open_contact_chat(id)
+                self.scrollLayout_2.addWidget(card)
 
         self.scrollLayout_2.addStretch()
         self.homePage.stackedWidget.setCurrentIndex(3)
 
-    def open_contact_chat(self, conctac_):
+    def open_contact_chat(self, u_id):
+
+        resp = requests.get(DB_URL + f"/users/{u_id}", headers=self.headers)
+
+        if resp.status_code == 200:
+
+            self.current_contact = resp.json()
+            self.open_chat()
+
+            self.nao_lidas[u_id] = 0
+
+            card = self.cards_conversas[u_id]
+            card.badge.hide()
+
+        else:
+            self.show_messageBox(QMessageBox.Icon.Warning, "Erro",
+                                 f"O usuário {u_id} não foi encontrado")
+            return
 
     def tempo_relativo(self, dt_str):
         dt = datetime.datetime.fromisoformat(dt_str)
@@ -263,7 +357,7 @@ class App:
         else:
             return f"há {int(segundos // 86400)} d"
 
-    def criar_card_conversa(self, nome, dt_str):
+    def criar_card_conversa(self, nome, u_id, dt_str):
         card = QWidget()
         card.setFixedHeight(70)
 
@@ -282,13 +376,17 @@ class App:
 
         # ✅ FOTO / AVATAR
         foto = QLabel()
-        pixmap = QPixmap(".\\sources\\profile-circle-svgrepo-com.png")  # sua imagem padrão
+        pixmap = QPixmap(".\\sources\\profile-circle-svgrepo-com.png")
         foto.setPixmap(
             pixmap.scaled(40, 40, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
         foto.setFixedSize(40, 40)
 
         # ✅ NOME + TEMPO
-        nome_label = QLabel(nome.upper())
+        nome_label = QLabel(
+            f'<span style="font-size:10pt; font-weight:600; color:#00165e;">{nome.upper()} </span>'
+            f'<span style="font-size:9pt; font-weight:600; color:#00165e;">(@{u_id})</span>'
+        )
+
         nome_label.setStyleSheet("font-size: 14px; font-weight: bold; color: #1f2933;")
 
         tempo_label = QLabel(self.tempo_relativo(dt_str))
@@ -298,9 +396,29 @@ class App:
         texto_layout.addWidget(nome_label)
         texto_layout.addWidget(tempo_label)
 
+        # ✅ BADGE DE NÃO LIDAS
+        badge = QLabel("0")
+        badge.setFixedSize(22, 22)
+        badge.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        badge.setStyleSheet("""
+            QLabel {
+                background-color: #22c55e;
+                color: white;
+                border-radius: 11px;
+                font-weight: bold;
+                font-size: 11px;
+            }
+        """)
+        badge.hide()
+
         layout.addWidget(foto)
         layout.addLayout(texto_layout)
         layout.addStretch()
+        layout.addWidget(badge)
+
+        # ✅ GUARDA REFERÊNCIAS NO CARD
+        card.badge = badge
+        card.user_id = u_id
 
         return card
 
@@ -323,13 +441,8 @@ class App:
             self.show_messageBox(QMessageBox.Icon.Warning, "Erro",f"As senhas não são iguais")
             return
 
-        headers = {
-            "x-internal-token": "dev-internal-token",
-            "Content-Type": "application/json"
-        }
-
         try:
-            resp = requests.post(DB_URL+"/users/create", json=payload, headers=headers)
+            resp = requests.post(DB_URL+"/users/create", json=payload, headers=self.headers )
         except:
             self.show_messageBox(QMessageBox.Icon.Warning, "Erro", f"Ocorreu um falha ao conectar com o servidor")
             return
@@ -359,10 +472,6 @@ class App:
             "password": self.homePage.password_3.text(),
         }
 
-        headers = {
-            "x-internal-token": "dev-internal-token",
-            "Content-Type": "application/json"
-        }
 
         for i in payload:
             if len(payload[i].strip()) < 3:
@@ -371,7 +480,7 @@ class App:
 
 
         try:
-            resp = requests.post(DB_URL+"/users/validate", json=payload, headers=headers)
+            resp = requests.post(DB_URL+"/users/validate", json=payload, headers=self.headers )
         except:
             self.show_messageBox(QMessageBox.Icon.Warning, "Erro", f"Ocorreu um falha ao conectar com o servidor")
             return
@@ -385,8 +494,17 @@ class App:
 
             if resp.json()["ok"]:
 
+                self.cards_conversas = {}
+                self.nao_lidas = {}
+
                 self.user_params = resp.json()
                 self.__show_conversations()
+
+                self.ws_listener = WebSocketListener(self.user_params['username'])
+                self.ws_listener.evento_recebido.connect(self.mensagem_recebida)
+                self.ws_listener.start()
+
+
 
             else:
                 self.show_messageBox(QMessageBox.Icon.Warning, "Erro",
