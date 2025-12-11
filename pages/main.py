@@ -497,16 +497,50 @@ class Ui_Form(object):
         self.search_btn.setObjectName("search_btn")
         self.horizontalLayout_11.addWidget(self.search_btn)
         self.verticalLayout_11.addWidget(self.widget_20)
-        self.scrollArea = QtWidgets.QScrollArea(parent=self.widget_18)
+        self.widget_42 = QtWidgets.QWidget(parent=self.widget_18)
+        self.widget_42.setStyleSheet("background-color: rgb(222, 222, 223);")
+        self.widget_42.setObjectName("widget_42")
+        self.verticalLayout_19 = QtWidgets.QVBoxLayout(self.widget_42)
+        self.verticalLayout_19.setObjectName("verticalLayout_19")
+        self.scrollArea = QtWidgets.QScrollArea(parent=self.widget_42)
         self.scrollArea.setStyleSheet("\n"
-"background-color: rgb(222, 222, 223);")
+"\n"
+"    QScrollBar:vertical {\n"
+"        background: #f0f0f0;\n"
+"        width: 12px;\n"
+"        margin: 5px 0 5px 0;\n"
+"        border: none;\n"
+"        border-radius: 6px;\n"
+"    }\n"
+"\n"
+"    QScrollBar::handle:vertical {\n"
+"        background: #c4c4c4;\n"
+"        min-height: 30px;\n"
+"        border-radius: 6px;\n"
+"    }\n"
+"\n"
+"    QScrollBar::handle:vertical:hover {\n"
+"        background: #a0a0a0;\n"
+"    }\n"
+"\n"
+"    QScrollBar::add-line:vertical,\n"
+"    QScrollBar::sub-line:vertical {\n"
+"        height: 0px;\n"
+"        subcontrol-origin: margin;\n"
+"    }\n"
+"\n"
+"    QScrollBar::add-page:vertical,\n"
+"    QScrollBar::sub-page:vertical {\n"
+"        background: none;\n"
+"    }")
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 455, 566))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 441, 557))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
-        self.verticalLayout_11.addWidget(self.scrollArea)
+        self.verticalLayout_19.addWidget(self.scrollArea)
+        self.verticalLayout_11.addWidget(self.widget_42)
         self.verticalLayout_10.addWidget(self.widget_18)
         self.stackedWidget.addWidget(self.home_page)
         self.chat_page = QtWidgets.QWidget()
@@ -604,7 +638,7 @@ class Ui_Form(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollArea_2.setObjectName("scrollArea_2")
         self.scrollAreaWidgetContents_2 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 433, 564))
+        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 441, 572))
         self.scrollAreaWidgetContents_2.setObjectName("scrollAreaWidgetContents_2")
         self.scrollArea_2.setWidget(self.scrollAreaWidgetContents_2)
         self.verticalLayout_14.addWidget(self.scrollArea_2)

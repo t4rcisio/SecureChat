@@ -37,7 +37,7 @@ border-radius:8px;
    <item>
     <widget class="QStackedWidget" name="stackedWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>5</number>
      </property>
      <widget class="QWidget" name="welcome_page">
       <layout class="QVBoxLayout" name="verticalLayout">
@@ -1036,24 +1036,61 @@ QPushButton:hover {
            </widget>
           </item>
           <item>
-           <widget class="QScrollArea" name="scrollArea">
+           <widget class="QWidget" name="widget_42" native="true">
             <property name="styleSheet">
-             <string notr="true">
-background-color: rgb(222, 222, 223);</string>
+             <string notr="true">background-color: rgb(222, 222, 223);</string>
             </property>
-            <property name="widgetResizable">
-             <bool>true</bool>
-            </property>
-            <widget class="QWidget" name="scrollAreaWidgetContents">
-             <property name="geometry">
-              <rect>
-               <x>0</x>
-               <y>0</y>
-               <width>455</width>
-               <height>566</height>
-              </rect>
-             </property>
-            </widget>
+            <layout class="QVBoxLayout" name="verticalLayout_19">
+             <item>
+              <widget class="QScrollArea" name="scrollArea">
+               <property name="styleSheet">
+                <string notr="true">
+
+    QScrollBar:vertical {
+        background: #f0f0f0;
+        width: 12px;
+        margin: 5px 0 5px 0;
+        border: none;
+        border-radius: 6px;
+    }
+
+    QScrollBar::handle:vertical {
+        background: #c4c4c4;
+        min-height: 30px;
+        border-radius: 6px;
+    }
+
+    QScrollBar::handle:vertical:hover {
+        background: #a0a0a0;
+    }
+
+    QScrollBar::add-line:vertical,
+    QScrollBar::sub-line:vertical {
+        height: 0px;
+        subcontrol-origin: margin;
+    }
+
+    QScrollBar::add-page:vertical,
+    QScrollBar::sub-page:vertical {
+        background: none;
+    }</string>
+               </property>
+               <property name="widgetResizable">
+                <bool>true</bool>
+               </property>
+               <widget class="QWidget" name="scrollAreaWidgetContents">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>441</width>
+                  <height>557</height>
+                 </rect>
+                </property>
+               </widget>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
          </layout>
@@ -1235,8 +1272,8 @@ QPushButton:hover {
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>433</width>
-                  <height>564</height>
+                  <width>441</width>
+                  <height>572</height>
                  </rect>
                 </property>
                </widget>
@@ -1379,6 +1416,44 @@ p, li { white-space: pre-wrap; }
               <height>100</height>
              </size>
             </property>
+           </widget>
+          </item>
+          <item alignment="Qt::AlignHCenter">
+           <widget class="QWidget" name="widget_43" native="true">
+            <layout class="QVBoxLayout" name="verticalLayout_20">
+             <item>
+              <widget class="QPushButton" name="back_5">
+               <property name="minimumSize">
+                <size>
+                 <width>100</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>130</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QPushButton {
+    background-color: rgb(249, 68, 73);
+    border-radius: 8px;
+    color: rgb(255, 255, 255);
+    font-size: 16px;      /* tamanho da fonte */
+    font-weight: bold;    /* deixa a fonte mais grossa */
+}
+QPushButton:hover {
+    background-color:rgb(175, 47, 51);
+}
+</string>
+               </property>
+               <property name="text">
+                <string>SAIR</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
          </layout>

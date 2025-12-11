@@ -7,7 +7,7 @@ import requests
 from PyQt6 import QtWidgets, QtGui
 import traceback
 
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QMessageBox, QWidget, QVBoxLayout, QLabel, QHBoxLayout
 
@@ -23,9 +23,8 @@ APP_ID = "SECURE-CHAT"
 ORGANIZATION = "Sistemas Distribuídos"
 
 DB_TOKEN = 'dev-internal-token'
-DB_URL = 'http://127.0.0.1:8100'
-
-CHAT_URL = 'http://127.0.0.1:9100'
+DB_URL = 'http://127.0.0.1:8000'
+CHAT_URL = 'http://127.0.0.1:8000'
 
 USER_DIR = ".\\user"
 
@@ -125,13 +124,14 @@ class App:
     def configure(self):
 
         self.user_params = False
+        self.current_contact = False
 
         self.homePage.opne_login_btn.clicked.connect(lambda state: self.homePage.stackedWidget.setCurrentIndex(2))
         self.homePage.open_new_accont_btn.clicked.connect(lambda state: self.homePage.stackedWidget.setCurrentIndex(1))
 
         self.homePage.back.clicked.connect(lambda state: self.homePage.stackedWidget.setCurrentIndex(0))
         self.homePage.back_2.clicked.connect(lambda state: self.homePage.stackedWidget.setCurrentIndex(0))
-        self.homePage.back_3.clicked.connect(lambda state: self.homePage.stackedWidget.setCurrentIndex(3))
+        self.homePage.back_3.clicked.connect(lambda state: self.volta_lista())
 
         self.homePage.save.clicked.connect(lambda state: self.__create_account())
 
@@ -155,6 +155,17 @@ class App:
         self.homePage.scrollArea.setWidget(self.scrollWidget_2)
         self.homePage.scrollArea.setWidgetResizable(True)
 
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.update_contacts_page)
+
+        # Executar a cada 1 minuto (60.000 ms)
+        self.timer.start(30_000)
+
+
+    def volta_lista(self):
+
+        self.current_contact = False
+        self.homePage.stackedWidget.setCurrentIndex(3)
 
     def send_message(self):
 
@@ -164,7 +175,7 @@ class App:
             "content": self.homePage.message_input.text(),
         }
 
-        resp = requests.post(CHAT_URL + f"/messages/send/", json=payload)
+        resp = requests.post(CHAT_URL + f"/send", json=payload)
 
         if resp:
             self.homePage.message_input.setText("")
@@ -188,6 +199,9 @@ class App:
 
         self.scrollLayout.addStretch()
 
+        self.homePage.scrollArea_2.widget().adjustSize()
+        QtWidgets.QApplication.processEvents()
+
         self.homePage.scrollArea_2.verticalScrollBar().setValue(
             self.homePage.scrollArea_2.verticalScrollBar().maximum()
         )
@@ -196,33 +210,34 @@ class App:
 
         sender = data["sender"]
 
-        # ✅ Se o usuário ainda não existe na lista → cria card novo
+        #  Se o usuário ainda não existe na lista → cria card novo
         if sender not in self.cards_conversas:
 
-            response = requests.get(f"{DB_URL}/users/{sender}", headers=self.headers)
+            response = requests.get(f"{DB_URL}/user/{sender}", headers=self.headers)
             if response.status_code == 200:
                 response_json = response.json()
 
                 try:
                     card = self.criar_card_conversa(response_json["name"], sender, datetime.datetime.now().isoformat())
                 except:
-                    print(traceback.format_exc())
+                    return
                 self.cards_conversas[sender] = card
                 self.nao_lidas[sender] = 0
 
                 card.mousePressEvent = lambda event, id=sender: self.open_contact_chat(id)
                 self.scrollLayout_2.insertWidget(0, card)
 
-        # ✅ Incrementa contador
         self.nao_lidas[sender] += 1
 
-        # ✅ Atualiza badge
         card = self.cards_conversas[sender]
         card.badge.setText(str(self.nao_lidas[sender]))
         card.badge.show()
 
+        self.__show_conversations()
+
+
     def buscar_historico(self, user1, user2):
-        url = f"{CHAT_URL}/messages/history/{user1}/{user2}"
+        url = f"{CHAT_URL}/history/{user1}/{user2}"
         response = requests.get(url)
         return response.json()
 
@@ -282,7 +297,7 @@ class App:
         if user_name == self.user_params['username']:
             return
 
-        resp = requests.get(DB_URL + f"/users/{user_name}", headers=self.headers)
+        resp = requests.get(DB_URL + f"/user/{user_name}", headers=self.headers)
 
         if resp.status_code == 200:
 
@@ -297,35 +312,55 @@ class App:
 
     def buscar_conversas(self, username):
 
-        url = f"{CHAT_URL}/messages/conversations/{username}"
+        url = f"{CHAT_URL}/conversations/{username}"
         response = requests.get(url)
         return response.json()
 
+    def update_contacts_page(self):
+
+        current_page = self.homePage.stackedWidget.currentIndex()
+
+        if current_page != 3:
+            return
+
+        self.__show_conversations()
+
+
     def __show_conversations(self):
 
-        self.clear_layout(self.scrollLayout)
+        self.clear_layout(self.scrollLayout_2)
+
+        if self.user_params == False:
+            return
 
         conversas = self.buscar_conversas(self.user_params['username'])
 
         for u_id, dt in conversas:
 
-            response = requests.get(f"{DB_URL}/users/{u_id}", headers=self.headers )
+            response = requests.get(f"{DB_URL}/user/{u_id}", headers=self.headers )
 
             if response.status_code == 200:
 
                 response_json = response.json()
-                card = self.criar_card_conversa(response_json["name"], u_id, dt)
-                self.cards_conversas[u_id] = card
-                self.nao_lidas[u_id] = 0
-                card.mousePressEvent = lambda event, id=u_id: self.open_contact_chat(id)
-                self.scrollLayout_2.addWidget(card)
+
+                if 'name' in response_json:
+
+                    card = self.criar_card_conversa(response_json["name"], u_id, dt)
+                    self.cards_conversas[u_id] = card
+                    card.mousePressEvent = lambda event, id=u_id: self.open_contact_chat(id)
+                    self.scrollLayout_2.addWidget(card)
 
         self.scrollLayout_2.addStretch()
-        self.homePage.stackedWidget.setCurrentIndex(3)
+
+        if self.current_contact != False:
+
+            self.open_contact_chat(self.current_contact["username"])
+        else:
+            self.homePage.stackedWidget.setCurrentIndex(3)
 
     def open_contact_chat(self, u_id):
 
-        resp = requests.get(DB_URL + f"/users/{u_id}", headers=self.headers)
+        resp = requests.get(DB_URL + f"/user/{u_id}", headers=self.headers)
 
         if resp.status_code == 200:
 
@@ -374,7 +409,7 @@ class App:
         layout = QHBoxLayout(card)
         layout.setContentsMargins(10, 8, 10, 8)
 
-        # ✅ FOTO / AVATAR
+        # FOTO / AVATAR
         foto = QLabel()
         pixmap = QPixmap(".\\sources\\profile-circle-svgrepo-com.png")
         foto.setPixmap(
@@ -396,8 +431,14 @@ class App:
         texto_layout.addWidget(nome_label)
         texto_layout.addWidget(tempo_label)
 
-        # ✅ BADGE DE NÃO LIDAS
-        badge = QLabel("0")
+
+        if u_id in self.nao_lidas:
+            ct = self.nao_lidas[u_id]
+        else:
+            ct = 0
+            self.nao_lidas[u_id] = 0
+
+        badge = QLabel(str(ct))
         badge.setFixedSize(22, 22)
         badge.setAlignment(Qt.AlignmentFlag.AlignCenter)
         badge.setStyleSheet("""
@@ -409,14 +450,15 @@ class App:
                 font-size: 11px;
             }
         """)
-        badge.hide()
+        if not ct:
+            badge.hide()
 
         layout.addWidget(foto)
         layout.addLayout(texto_layout)
         layout.addStretch()
         layout.addWidget(badge)
 
-        # ✅ GUARDA REFERÊNCIAS NO CARD
+
         card.badge = badge
         card.user_id = u_id
 
@@ -442,7 +484,7 @@ class App:
             return
 
         try:
-            resp = requests.post(DB_URL+"/users/create", json=payload, headers=self.headers )
+            resp = requests.post(DB_URL+"/register", json=payload, headers=self.headers )
         except:
             self.show_messageBox(QMessageBox.Icon.Warning, "Erro", f"Ocorreu um falha ao conectar com o servidor")
             return
@@ -480,7 +522,7 @@ class App:
 
 
         try:
-            resp = requests.post(DB_URL+"/users/validate", json=payload, headers=self.headers )
+            resp = requests.post(DB_URL+"/login", json=payload)
         except:
             self.show_messageBox(QMessageBox.Icon.Warning, "Erro", f"Ocorreu um falha ao conectar com o servidor")
             return

@@ -13,7 +13,6 @@ SECRET_KEY = os.environ.get("AUTH_SECRET_KEY", "MEGA_SECRET_KEY_CHANGE_THIS")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
-# Pydantic models (same shapes as before)
 class User(BaseModel):
     name: str
     username: str  # Primary Key - não editável após a criação
@@ -26,7 +25,6 @@ class Login(BaseModel):
 
 app = FastAPI(title="Auth Service")
 
-# HTTP client (sync via httpx)
 client = httpx.Client(timeout=10.0)
 
 def create_jwt(username: str):
@@ -85,7 +83,6 @@ def login(data: Login):
     url = f"{DB_SERVICE_URL}/users/validate"
     resp = client.post(url, json=data.dict(), headers=internal_headers())
     if resp.status_code != 200:
-        # DB service sempre responde 200 com {ok:True/False} — mas verificamos
         raise HTTPException(status_code=500, detail="Erro ao contatar DB Service")
     body = resp.json()
     if not body.get("ok"):

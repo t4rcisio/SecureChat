@@ -6,9 +6,6 @@ from typing import Dict
 from datetime import datetime
 from fastapi.middleware.cors import CORSMiddleware
 
-# ==========================
-# ✅ CONFIGURAÇÃO DO BANCO
-# ==========================
 
 DATABASE_URL = "sqlite:///./chat.db"
 
@@ -19,9 +16,6 @@ engine = create_engine(
 SessionLocal = sessionmaker(bind=engine)
 Base = declarative_base()
 
-# ==========================
-# ✅ MODELO DA TABELA
-# ==========================
 
 class MessageDB(Base):
     __tablename__ = "messages"
@@ -34,9 +28,6 @@ class MessageDB(Base):
 
 Base.metadata.create_all(bind=engine)
 
-# ==========================
-# ✅ SCHEMAS Pydantic
-# ==========================
 
 class MessageCreate(BaseModel):
     sender: str
@@ -49,9 +40,6 @@ class MessageOut(BaseModel):
     content: str
     timestamp: datetime
 
-# ==========================
-# ✅ FASTAPI APP
-# ==========================
 
 app = FastAPI()
 connections: Dict[str, WebSocket] = {}
@@ -72,10 +60,6 @@ def get_db():
     finally:
         db.close()
 
-# ==========================
-# ✅ WEBSOCKET - TEMPO REAL
-# ==========================
-
 @app.websocket("/ws/{username}")
 async def websocket_endpoint(ws: WebSocket, username: str):
     await ws.accept()
@@ -85,10 +69,6 @@ async def websocket_endpoint(ws: WebSocket, username: str):
             await ws.receive_text()
     except:
         connections.pop(username, None)
-
-# ==========================
-# ✅ ENVIAR MENSAGEM
-# ==========================
 
 @app.post("/messages/send")
 async def send_message(msg: MessageCreate, db: Session = Depends(get_db)):
@@ -102,7 +82,6 @@ async def send_message(msg: MessageCreate, db: Session = Depends(get_db)):
     db.add(message)
     db.commit()
 
-    # ✅ Envio em tempo real
     if msg.receiver in connections:
         await connections[msg.receiver].send_json({
             "sender": msg.sender,
@@ -111,10 +90,6 @@ async def send_message(msg: MessageCreate, db: Session = Depends(get_db)):
         })
 
     return {"status": "ok"}
-
-# ==========================
-# ✅ BUSCAR HISTÓRICO
-# ==========================
 
 @app.get("/messages/history/{user1}/{user2}")
 async def get_history(user1: str, user2: str, db: Session = Depends(get_db)):
