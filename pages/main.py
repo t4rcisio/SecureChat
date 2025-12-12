@@ -711,6 +711,27 @@ class Ui_Form(object):
         self.pushButton_4.setIconSize(QtCore.QSize(100, 100))
         self.pushButton_4.setObjectName("pushButton_4")
         self.verticalLayout_18.addWidget(self.pushButton_4)
+        self.widget_43 = QtWidgets.QWidget(parent=self.widget_34)
+        self.widget_43.setObjectName("widget_43")
+        self.verticalLayout_20 = QtWidgets.QVBoxLayout(self.widget_43)
+        self.verticalLayout_20.setObjectName("verticalLayout_20")
+        self.back_5 = QtWidgets.QPushButton(parent=self.widget_43)
+        self.back_5.setMinimumSize(QtCore.QSize(100, 30))
+        self.back_5.setMaximumSize(QtCore.QSize(130, 16777215))
+        self.back_5.setStyleSheet("QPushButton {\n"
+"    background-color: rgb(249, 68, 73);\n"
+"    border-radius: 8px;\n"
+"    color: rgb(255, 255, 255);\n"
+"    font-size: 16px;      /* tamanho da fonte */\n"
+"    font-weight: bold;    /* deixa a fonte mais grossa */\n"
+"}\n"
+"QPushButton:hover {\n"
+"    background-color:rgb(175, 47, 51);\n"
+"}\n"
+"")
+        self.back_5.setObjectName("back_5")
+        self.verticalLayout_20.addWidget(self.back_5)
+        self.verticalLayout_18.addWidget(self.widget_43, 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
         self.verticalLayout_17.addWidget(self.widget_34)
         self.widget_35 = QtWidgets.QWidget(parent=self.page)
         self.widget_35.setStyleSheet("background-color: rgb(225, 225, 226)")
@@ -939,6 +960,7 @@ class Ui_Form(object):
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:18pt; font-weight:600; color:#00165e;\">MY ACCOUNT</span></p></body></html>"))
+        self.back_5.setText(_translate("Form", "SAIR"))
         self.label_9.setText(_translate("Form", "Name"))
         self.label_14.setText(_translate("Form", "User"))
         self.label_15.setText(_translate("Form", "Email"))

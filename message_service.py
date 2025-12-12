@@ -129,7 +129,7 @@ def get_conversations(username: str, db: Session = Depends(get_db)):
 
 def run_db_service():
     import uvicorn
-    uvicorn.run("message_service:app", host="127.0.0.1", port=9100, reload=True)
+    uvicorn.run("message_service:app", host="127.0.0.1", port=9100, reload=False)
 
 if __name__ == "__main__":
     run_db_service()

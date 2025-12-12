@@ -9,7 +9,7 @@ import traceback
 
 from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QPixmap
-from PyQt6.QtWidgets import QMessageBox, QWidget, QVBoxLayout, QLabel, QHBoxLayout
+from PyQt6.QtWidgets import QMessageBox, QWidget, QVBoxLayout, QLabel, QHBoxLayout, QLineEdit
 
 import json
 import asyncio
@@ -133,13 +133,27 @@ class App:
         self.homePage.back_2.clicked.connect(lambda state: self.homePage.stackedWidget.setCurrentIndex(0))
         self.homePage.back_3.clicked.connect(lambda state: self.volta_lista())
 
+        self.homePage.login.clicked.connect(lambda state: self.__login())
+
+        self.homePage.back_4.clicked.connect(lambda state: self.homePage.stackedWidget.setCurrentIndex(3))
+
+        self.homePage.pushButton_5.clicked.connect(lambda state: self.open_user_data())
+
+        self.homePage.pushButton_5.clicked.connect(lambda state: self.open_user_data())
+
         self.homePage.save.clicked.connect(lambda state: self.__create_account())
 
-        self.homePage.login.clicked.connect(lambda state: self.__login())
+        self.homePage.back_5.clicked.connect(lambda state: self.exit())
 
         self.homePage.search_btn.clicked.connect(lambda state: self.__add_contact())
 
         self.homePage.send.clicked.connect(lambda state: self.send_message())
+
+        self.homePage.password.setEchoMode(QLineEdit.EchoMode.Password)
+        self.homePage.password_2.setEchoMode(QLineEdit.EchoMode.Password)
+        self.homePage.password_3.setEchoMode(QLineEdit.EchoMode.Password)
+        self.homePage.password_4.setEchoMode(QLineEdit.EchoMode.Password)
+        self.homePage.password_5.setEchoMode(QLineEdit.EchoMode.Password)
 
         self.scrollWidget = QWidget()
         self.scrollLayout = QVBoxLayout(self.scrollWidget)
@@ -159,7 +173,22 @@ class App:
         self.timer.timeout.connect(self.update_contacts_page)
 
         # Executar a cada 1 minuto (60.000 ms)
-        self.timer.start(30_000)
+        self.timer.start(5_000)
+
+    def exit(self):
+
+        self.user_params = False
+        self.current_contact = False
+        self.homePage.stackedWidget.setCurrentIndex(0)
+
+    def open_user_data(self):
+
+        self.homePage.stackedWidget.setCurrentIndex(5)
+
+        self.homePage.name_2.setText(self.user_params["name"])
+        self.homePage.user_3.setText(self.user_params["username"])
+        self.homePage.email_2.setText(self.user_params["email"])
+
 
 
     def volta_lista(self):
@@ -424,7 +453,8 @@ class App:
 
         nome_label.setStyleSheet("font-size: 14px; font-weight: bold; color: #1f2933;")
 
-        tempo_label = QLabel(self.tempo_relativo(dt_str))
+        d_tme = self.tempo_relativo(dt_str)
+        tempo_label = QLabel(d_tme)
         tempo_label.setStyleSheet("font-size: 11px; color: gray;")
 
         texto_layout = QVBoxLayout()
@@ -450,8 +480,12 @@ class App:
                 font-size: 11px;
             }
         """)
-        if not ct:
+        if not ct and d_tme != "agora":
             badge.hide()
+
+        if d_tme == "agora" and self.nao_lidas[u_id] == 0:
+            self.nao_lidas[u_id] = 1
+            badge.setText("1")
 
         layout.addWidget(foto)
         layout.addLayout(texto_layout)
@@ -527,6 +561,10 @@ class App:
             self.show_messageBox(QMessageBox.Icon.Warning, "Erro", f"Ocorreu um falha ao conectar com o servidor")
             return
 
+        if resp.status_code == 401:
+            self.show_messageBox(QMessageBox.Icon.Warning, "Erro", f"Usuário ou senha inválidos")
+            return
+
         if resp.status_code != 200:
             self.show_messageBox(QMessageBox.Icon.Warning, "Erro", f"Ocorreu um falha ao conectar com o servidor {resp.content}")
             return
@@ -546,6 +584,8 @@ class App:
                 self.ws_listener.evento_recebido.connect(self.mensagem_recebida)
                 self.ws_listener.start()
 
+                self.homePage.user_2.setText(""),
+                self.homePage.password_3.setText(""),
 
 
             else:

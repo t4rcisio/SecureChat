@@ -165,7 +165,7 @@ async def websocket_handler(ws: WebSocket, username: str):
 # ================================================
 def run_gateway():
     import uvicorn
-    uvicorn.run("gateway_service:app", host="127.0.0.1", port=8000, reload=True)
+    uvicorn.run("gateway_service:app", host="127.0.0.1", port=8000, reload=False)
 
 if __name__ == "__main__":
     run_gateway()
