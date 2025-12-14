@@ -5,37 +5,13 @@ import requests
 import websockets
 import matplotlib.pyplot as plt
 
-# ===== SERVIÇOS =====
-USER_SERVER = "http://127.0.0.1:8100"
 GATEWAY_HTTP = "http://127.0.0.1:8000"
 GATEWAY_WS = "ws://127.0.0.1:8000/ws"
-
 PASSWORD = "123456"
-INTERNAL_TOKEN = "dev-internal-token"
-
-# ===== SETUP: CRIAR USUÁRIOS =====
-def create_users(n):
-    print(f"🛠 Criando {n} usuários...")
-    for i in range(1, n + 1):
-        payload = {
-            "name": f"Usuário {i}",
-            "username": f"usuario{i}",
-            "email": f"usuario{i}@teste.com",
-            "password": PASSWORD
-        }
-
-        r = requests.post(f"{USER_SERVER}/users/create", json=payload, headers={"x-internal-token": INTERNAL_TOKEN})
-
-        # 201 ou 200 → criado | 409 → já existe
-        if r.status_code in (200, 201, 409):
-            continue
-        else:
-            print(f"⚠ Erro ao criar usuario{i}: {r.text}")
 
 
-# ===== SIMULAÇÃO =====
 async def simulate_user(username, users, metrics):
-    # LOGIN
+    # -------- LOGIN --------
     t0 = time.perf_counter()
     r = requests.post(f"{GATEWAY_HTTP}/login", json={
         "username": username,
@@ -46,11 +22,12 @@ async def simulate_user(username, users, metrics):
     if r.status_code != 200:
         return
 
+    # -------- WS CONNECT --------
     ws = await websockets.connect(f"{GATEWAY_WS}/{username}")
 
     target = users[(users.index(username) + 1) % len(users)]
 
-    # SEND
+    # -------- SEND MESSAGE --------
     payload = {
         "sender": username,
         "receiver": target,
@@ -61,7 +38,7 @@ async def simulate_user(username, users, metrics):
     requests.post(f"{GATEWAY_HTTP}/send", json=payload)
     metrics["send"].append(time.perf_counter() - t1)
 
-    # RECEIVE
+    # -------- RECEIVE --------
     try:
         t2 = time.perf_counter()
         await asyncio.wait_for(ws.recv(), timeout=5)
@@ -86,22 +63,22 @@ async def run_test(n_users):
     }
 
 
-# ===== EXECUÇÃO =====
 async def main():
     cargas = [5, 10, 20, 40]
 
-    login_avg, send_avg, recv_avg = [], [], []
+    login_avg = []
+    send_avg = []
+    recv_avg = []
 
     for c in cargas:
-        create_users(c)  # 🔹 SETUP (fora da medição)
-        print(f"🚀 Executando teste com {c} usuários...")
+        print(f"🔎 Testando com {c} usuários...")
         r = await run_test(c)
-
         login_avg.append(r["login"])
         send_avg.append(r["send"])
         recv_avg.append(r["recv"])
 
-    # ===== GRÁFICOS =====
+    # -------- GRÁFICOS --------
+
     plt.figure()
     plt.plot(cargas, login_avg, marker='o')
     plt.xlabel("Usuários simultâneos")
@@ -113,7 +90,7 @@ async def main():
     plt.plot(cargas, send_avg, marker='o')
     plt.xlabel("Usuários simultâneos")
     plt.ylabel("Tempo médio (s)")
-    plt.title("Teste 2 – Latência de Envio")
+    plt.title("Teste 2 – Latência de Envio de Mensagens")
     plt.show()
 
     plt.figure()
